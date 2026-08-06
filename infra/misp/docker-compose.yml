@@ -1,0 +1,45 @@
+services:
+  misp-core:
+    image: coolacid/misp-docker:core-latest
+    container_name: misp-core
+    restart: always
+    ports:
+      - "80:80"
+      - "8443:80"
+      - "8444:443"
+    environment:
+      - MYSQL_HOST=misp-db
+      - MYSQL_LOGIN=misp
+      - MYSQL_PASSWORD=misp_password
+      - MYSQL_DATABASE=misp
+      - MISP_ADMIN_EMAIL=admin@admin.test
+      - MISP_ADMIN_PASSPHRASE=Admin123!@#Password
+      - BASEURL=
+      - CRON_USER_ID=1
+      - NOREDIR=true
+      - CAN_USE_SELF_SIGNED=true
+      - REDIS_HOST=redis
+      - SECURESSL=false
+    depends_on:
+      - misp-db
+      - redis
+
+  misp-db:
+    image: mysql:8.0
+    container_name: misp-db
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=misp_root_password
+      - MYSQL_USER=misp
+      - MYSQL_PASSWORD=misp_password
+      - MYSQL_DATABASE=misp
+    volumes:
+      - misp_db_data:/var/lib/mysql
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    restart: always
+
+volumes:
+  misp_db_data:

@@ -1,0 +1,626 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  SOC_ANALYST
+  INVESTIGATOR
+  AUDITOR
+}
+
+model User {
+  id           String    @id @default(uuid())
+  email        String    @unique
+  passwordHash String    @map("password_hash")
+  firstName    String    @map("first_name")
+  lastName     String    @map("last_name")
+  role         UserRole  @default(SOC_ANALYST)
+  isActive     Boolean   @default(true) @map("is_active")
+  lastLoginAt  DateTime? @map("last_login_at")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  auditLogs    AuditLog[]
+  refreshTokens RefreshToken[]
+  assignedAlerts Alert[]
+  assignedCases InvestigationCase[] @relation("AssignedCases")
+  createdCases  InvestigationCase[] @relation("CreatedCases")
+  caseNotes     CaseNote[]
+  generatedReports IncidentReport[]
+  createdPlaybooks Playbook[]
+  notifications    Notification[]
+
+  @@map("users")
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  action    String
+  resource  String
+  details   Json?
+  ipAddress String?  @map("ip_address")
+  timestamp DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([timestamp])
+  @@index([action])
+  @@map("audit_logs")
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String   @map("user_id")
+  expiresAt DateTime @map("expires_at")
+  revokedAt DateTime? @map("revoked_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([token])
+  @@map("refresh_tokens")
+}
+
+enum FeedType {
+  MISP
+  OTX
+  NVD
+  CUSTOM
+}
+
+enum IocType {
+  IP_ADDRESS
+  DOMAIN
+  HASH_MD5
+  HASH_SHA1
+  HASH_SHA256
+  URL
+  EMAIL
+  FILE_NAME
+}
+
+enum SyncStatus {
+  PENDING
+  IN_PROGRESS
+  SUCCESS
+  FAILED
+}
+
+enum CveSeverity {
+  NONE
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+model ThreatFeed {
+  id                  String       @id @default(uuid())
+  name                String
+  type                FeedType
+  baseUrl             String?      @map("base_url")
+  apiKeyEnvVar        String?      @map("api_key_env_var")
+  enabled             Boolean      @default(false)
+  fetchIntervalMinutes Int         @default(60) @map("fetch_interval_minutes")
+  config              Json?
+  lastSyncAt          DateTime?    @map("last_sync_at")
+  createdAt           DateTime     @default(now()) @map("created_at")
+  updatedAt           DateTime     @updatedAt @map("updated_at")
+
+  iocs                Ioc[]
+  syncLogs            FeedSyncLog[]
+
+  @@index([type])
+  @@index([enabled])
+  @@map("threat_feeds")
+}
+
+model Ioc {
+  id              String    @id @default(uuid())
+  type            IocType
+  value           String
+  stixData        Json?     @map("stix_data")
+  confidenceScore Int       @default(50) @map("confidence_score")
+  threatSeverity  String?   @map("threat_severity")
+  tags            String[]  @default([])
+  firstSeenAt     DateTime  @default(now()) @map("first_seen_at")
+  lastSeenAt      DateTime  @default(now()) @map("last_seen_at")
+  feedId          String    @map("feed_id")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  feed            ThreatFeed @relation(fields: [feedId], references: [id])
+  caseIocs        CaseIoc[]
+
+  @@unique([type, value, feedId])
+  @@index([value])
+  @@index([type])
+  @@index([feedId])
+  @@index([confidenceScore])
+  @@index([firstSeenAt])
+  @@map("iocs")
+}
+
+model Cve {
+  id          String      @id @default(uuid())
+  cveId       String      @unique @map("cve_id")
+  description String
+  cvssV2Score Float?      @map("cvss_v2_score")
+  cvssV3Score Float?      @map("cvss_v3_score")
+  severity    CveSeverity @default(NONE)
+  publishedAt DateTime    @map("published_at")
+  modifiedAt  DateTime?   @map("modified_at")
+  references  Json?
+  cpeMatch    Json?       @map("cpe_match")
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+
+  @@index([cveId])
+  @@index([severity])
+  @@index([publishedAt])
+  @@index([cvssV3Score])
+  @@map("cves")
+}
+
+model FeedSyncLog {
+  id              String     @id @default(uuid())
+  feedId          String     @map("feed_id")
+  status          SyncStatus @default(PENDING)
+  recordsIngested Int        @default(0) @map("records_ingested")
+  errorMessage    String?    @map("error_message")
+  startedAt       DateTime   @default(now()) @map("started_at")
+  completedAt     DateTime?  @map("completed_at")
+
+  feed            ThreatFeed @relation(fields: [feedId], references: [id])
+
+  @@index([feedId])
+  @@index([status])
+  @@index([startedAt])
+  @@map("feed_sync_logs")
+}
+
+enum AlertSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum AlertStatus {
+  NEW
+  TRIAGED
+  IN_PROGRESS
+  RESOLVED
+  FALSE_POSITIVE
+}
+
+enum MalwareFamily {
+  RANSOMWARE
+  TROJAN
+  WORM
+  SPYWARE
+  ROOTKIT
+  BACKDOOR
+  UNKNOWN
+}
+
+model Alert {
+  id               String        @id @default(uuid())
+  title            String
+  description      String
+  severity         AlertSeverity @default(MEDIUM)
+  status           AlertStatus   @default(NEW)
+  sourceType       String        @map("source_type")
+  sourceId         String        @map("source_id")
+  ruleId           String?       @map("rule_id")
+  riskScore        Int           @default(0) @map("risk_score")
+  assignedToUserId String?       @map("assigned_to_user_id")
+  createdAt        DateTime      @default(now()) @map("created_at")
+  resolvedAt       DateTime?     @map("resolved_at")
+
+  assignedToUser   User?         @relation(fields: [assignedToUserId], references: [id])
+  rule             AlertRule?    @relation(fields: [ruleId], references: [id])
+  caseAlerts       CaseAlert[]
+  alertTechniques  AlertTechnique[]
+
+  @@index([status])
+  @@index([severity])
+  @@index([createdAt])
+  @@index([assignedToUserId])
+  @@index([ruleId])
+  @@map("alerts")
+}
+
+model AlertRule {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  ruleType    String   @map("rule_type")
+  config      Json
+  enabled     Boolean  @default(true)
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  alerts      Alert[]
+
+  @@map("alert_rules")
+}
+
+model MalwareSample {
+  id          String        @id @default(uuid())
+  sha256      String        @unique
+  sha1        String?
+  md5         String?
+  family      MalwareFamily @default(UNKNOWN)
+  name        String
+  firstSeenAt DateTime      @default(now()) @map("first_seen_at")
+  source      String
+  tags        String[]      @default([])
+  notes       String?
+
+  @@index([family])
+  @@index([sha256])
+  @@index([name])
+  @@map("malware_samples")
+}
+
+enum CaseStatus {
+  OPEN
+  IN_PROGRESS
+  PENDING_REVIEW
+  CLOSED
+}
+
+enum CasePriority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+model InvestigationCase {
+  id               String       @id @default(uuid())
+  title            String
+  description      String
+  priority         CasePriority @default(MEDIUM)
+  status           CaseStatus   @default(OPEN)
+  assignedToUserId String?      @map("assigned_to_user_id")
+  createdById      String       @map("created_by_id")
+  createdAt        DateTime     @default(now()) @map("created_at")
+  updatedAt        DateTime     @updatedAt @map("updated_at")
+  closedAt         DateTime?    @map("closed_at")
+
+  assignedToUser   User?        @relation("AssignedCases", fields: [assignedToUserId], references: [id])
+  createdBy        User         @relation("CreatedCases", fields: [createdById], references: [id])
+  
+  notes            CaseNote[]
+  caseAlerts       CaseAlert[]
+  caseIocs         CaseIoc[]
+  forensicArtifacts ForensicArtifact[]
+  reports          IncidentReport[]
+
+  @@index([status])
+  @@index([priority])
+  @@index([assignedToUserId])
+  @@index([createdById])
+  @@index([createdAt])
+  @@map("investigation_cases")
+}
+
+model CaseNote {
+  id           String            @id @default(uuid())
+  caseId       String            @map("case_id")
+  authorUserId String            @map("author_user_id")
+  content      String
+  createdAt    DateTime          @default(now()) @map("created_at")
+
+  investigationCase InvestigationCase @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  authorUser        User              @relation(fields: [authorUserId], references: [id])
+
+  @@index([caseId])
+  @@index([authorUserId])
+  @@index([createdAt])
+  @@map("case_notes")
+}
+
+model CaseAlert {
+  id        String            @id @default(uuid())
+  caseId    String            @map("case_id")
+  alertId   String            @map("alert_id")
+  createdAt DateTime          @default(now()) @map("created_at")
+
+  case      InvestigationCase @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  alert     Alert             @relation(fields: [alertId], references: [id], onDelete: Cascade)
+
+  @@unique([caseId, alertId])
+  @@index([caseId])
+  @@index([alertId])
+  @@map("case_alerts")
+}
+
+model CaseIoc {
+  id        String            @id @default(uuid())
+  caseId    String            @map("case_id")
+  iocId     String            @map("ioc_id")
+  createdAt DateTime          @default(now()) @map("created_at")
+
+  case      InvestigationCase @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  ioc       Ioc               @relation(fields: [iocId], references: [id], onDelete: Cascade)
+
+  @@unique([caseId, iocId])
+  @@index([caseId])
+  @@index([iocId])
+  @@map("case_iocs")
+}
+
+// ── Phase 5: Digital Forensics ─────────────────────
+
+enum ArtifactType {
+  PCAP
+  MEMORY_DUMP
+  DISK_IMAGE
+  LOG_FILE
+  MALWARE_BINARY
+  EMAIL_EML
+  DOCUMENT
+  REGISTRY_HIVE
+  NETWORK_FLOW
+  YARA_MATCH
+  OTHER
+}
+
+enum CustodyAction {
+  COLLECTED
+  TRANSFERRED
+  ANALYZED
+  VERIFIED
+  EXPORTED
+  RELEASED
+  TAMPER_DETECTED
+}
+
+model ForensicArtifact {
+  id              String       @id @default(uuid())
+  caseId          String       @map("case_id")
+  artifactType    ArtifactType @map("artifact_type")
+  fileName        String       @map("file_name")
+  filePath        String?      @map("file_path")
+  fileSizeBytes   BigInt?      @map("file_size_bytes")
+  sha256          String
+  sha1            String?
+  md5             String?
+  mimeType        String?      @map("mime_type")
+  description     String?
+  tags            String[]     @default([])
+  vtDetectionRate String?      @map("vt_detection_rate")
+  vtPermalink     String?      @map("vt_permalink")
+  vtScannedAt     DateTime?    @map("vt_scanned_at")
+  yaraMatches     Json?        @map("yara_matches")
+  yaraScannedAt   DateTime?    @map("yara_scanned_at")
+  collectedBy     String       @map("collected_by")
+  collectedAt     DateTime     @default(now()) @map("collected_at")
+  createdAt       DateTime     @default(now()) @map("created_at")
+
+  case            InvestigationCase @relation(fields: [caseId], references: [id])
+  custodyEvents   CustodyEvent[]
+
+  @@index([caseId])
+  @@index([sha256])
+  @@index([artifactType])
+  @@map("forensic_artifacts")
+}
+
+model CustodyEvent {
+  id          String        @id @default(uuid())
+  artifactId  String        @map("artifact_id")
+  action      CustodyAction
+  performedBy String        @map("performed_by")
+  notes       String?
+  hashAtEvent String?       @map("hash_at_event")
+  timestamp   DateTime      @default(now())
+
+  artifact    ForensicArtifact @relation(fields: [artifactId], references: [id], onDelete: Cascade)
+
+  @@index([artifactId])
+  @@index([timestamp])
+  @@map("custody_events")
+}
+
+// ── Phase 5: AI Incident Reporting ─────────────────
+
+enum ReportFormat {
+  EXECUTIVE
+  TECHNICAL
+  POST_MORTEM
+  CLOSURE
+}
+
+model IncidentReport {
+  id                String            @id @default(uuid())
+  caseId            String            @map("case_id")
+  format            ReportFormat
+  title             String
+  content           String
+  aiModelUsed       String?           @map("ai_model_used")
+  attackTechniques  Json?             @map("attack_techniques")
+  riskScore         Int?              @map("risk_score")
+  generatedByUserId String            @map("generated_by_user_id")
+  generatedAt       DateTime          @default(now()) @map("generated_at")
+
+  case              InvestigationCase @relation(fields: [caseId], references: [id])
+  generatedBy       User              @relation(fields: [generatedByUserId], references: [id])
+
+  @@index([caseId])
+  @@index([format])
+  @@index([generatedAt])
+  @@map("incident_reports")
+}
+
+// ── Phase 5: MITRE ATT&CK ─────────────────────────
+
+model MitreAttackTechnique {
+  id            String   @id
+  name          String
+  tacticId      String   @map("tactic_id")
+  tacticName    String   @map("tactic_name")
+  description   String
+  url           String
+  platforms     String[] @default([])
+  dataSources   String[] @default([]) @map("data_sources")
+
+  alertTechniques AlertTechnique[]
+
+  @@index([tacticId])
+  @@map("mitre_attack_techniques")
+}
+
+model AlertTechnique {
+  id            String   @id @default(uuid())
+  alertId       String   @map("alert_id")
+  techniqueId   String   @map("technique_id")
+  confidence    Int      @default(50)
+  autoDetected  Boolean  @default(false) @map("auto_detected")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  alert         Alert    @relation(fields: [alertId], references: [id], onDelete: Cascade)
+  technique     MitreAttackTechnique @relation(fields: [techniqueId], references: [id])
+
+  @@unique([alertId, techniqueId])
+  @@index([alertId])
+  @@index([techniqueId])
+  @@map("alert_techniques")
+}
+
+// ── Phase 5: SIEM Integration ──────────────────────
+
+enum SiemType {
+  SPLUNK_HEC
+  WAZUH
+  ELASTIC_SIEM
+  SYSLOG_CEF
+  WEBHOOK
+  GENERIC
+}
+
+model SiemConnector {
+  id          String   @id @default(uuid())
+  name        String
+  type        SiemType
+  config      Json
+  enabled     Boolean  @default(true)
+  lastSyncAt  DateTime? @map("last_sync_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  syncLogs    SiemSyncLog[]
+
+  @@index([type])
+  @@index([enabled])
+  @@map("siem_connectors")
+}
+
+model SiemSyncLog {
+  id              String   @id @default(uuid())
+  connectorId     String   @map("connector_id")
+  eventsForwarded Int      @default(0) @map("events_forwarded")
+  eventsReceived  Int      @default(0) @map("events_received")
+  errorMessage    String?  @map("error_message")
+  executedAt      DateTime @default(now()) @map("executed_at")
+
+  connector       SiemConnector @relation(fields: [connectorId], references: [id], onDelete: Cascade)
+
+  @@index([connectorId])
+  @@index([executedAt])
+  @@map("siem_sync_logs")
+}
+
+// ── Phase 5: Automated Playbooks (SOAR) ────────────
+
+enum PlaybookTrigger {
+  ALERT_CREATED
+  ALERT_CRITICAL
+  IOC_INGESTED
+  CASE_CREATED
+  FORENSIC_TAMPER
+  YARA_MATCH
+  VT_DETECTION
+  MANUAL
+}
+
+enum PlaybookStatus {
+  ACTIVE
+  DISABLED
+  DRAFT
+}
+
+model Playbook {
+  id          String          @id @default(uuid())
+  name        String
+  description String
+  trigger     PlaybookTrigger
+  conditions  Json
+  actions     Json
+  status      PlaybookStatus  @default(DRAFT)
+  createdById String          @map("created_by_id")
+  createdAt   DateTime        @default(now()) @map("created_at")
+  updatedAt   DateTime        @updatedAt @map("updated_at")
+
+  createdBy   User            @relation(fields: [createdById], references: [id])
+  executions  PlaybookExecution[]
+
+  @@index([trigger])
+  @@index([status])
+  @@map("playbooks")
+}
+
+model PlaybookExecution {
+  id           String   @id @default(uuid())
+  playbookId   String   @map("playbook_id")
+  triggeredBy  String   @map("triggered_by")
+  actionsRun   Json     @map("actions_run")
+  success      Boolean
+  errorMessage String?  @map("error_message")
+  durationMs   Int      @default(0) @map("duration_ms")
+  executedAt   DateTime @default(now()) @map("executed_at")
+
+  playbook     Playbook @relation(fields: [playbookId], references: [id], onDelete: Cascade)
+
+  @@index([playbookId])
+  @@index([executedAt])
+  @@map("playbook_executions")
+}
+
+// ── Phase 5: Notifications ─────────────────────────
+
+enum NotificationChannel {
+  EMAIL
+  SLACK
+  IN_APP
+}
+
+model Notification {
+  id       String              @id @default(uuid())
+  userId   String              @map("user_id")
+  channel  NotificationChannel
+  subject  String
+  body     String
+  metadata Json?
+  read     Boolean             @default(false)
+  sentAt   DateTime            @default(now()) @map("sent_at")
+
+  user     User                @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([read])
+  @@index([sentAt])
+  @@map("notifications")
+}

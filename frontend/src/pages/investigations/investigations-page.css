@@ -1,0 +1,187 @@
+.investigations-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 32px;
+  animation: fade-in 0.4s ease-out;
+  color: var(--text-primary, #e2e8f0);
+}
+
+.inv-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.stats-bar--compact {
+  flex: 1;
+  max-width: 600px;
+}
+
+.btn--gradient {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, var(--accent-cyan, #00f0ff), #0284c7);
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(0, 240, 255, 0.3);
+}
+
+.btn--gradient:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 240, 255, 0.5);
+  filter: brightness(1.1);
+}
+
+.investigations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 24px;
+}
+
+.inv-card {
+  background: var(--glass-bg, rgba(255,255,255,0.03));
+  border: 1px solid var(--glass-border, rgba(255,255,255,0.06));
+  border-top-width: 4px;
+  border-radius: 12px;
+  padding: 24px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  animation: slide-up 0.5s ease-out backwards;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.inv-card:hover {
+  transform: translateY(-4px);
+  background: rgba(255,255,255,0.05);
+}
+
+.inv-card--p1 { border-top-color: var(--status-danger, #ef4444); }
+.inv-card--p2 { border-top-color: var(--status-warning, #f59e0b); }
+.inv-card--p3 { border-top-color: var(--accent-purple, #a855f7); }
+.inv-card--p4 { border-top-color: var(--accent-cyan, #00f0ff); }
+
+.inv-card--p1:hover { box-shadow: 0 10px 30px rgba(239, 68, 68, 0.1); }
+.inv-card--p2:hover { box-shadow: 0 10px 30px rgba(245, 158, 11, 0.1); }
+.inv-card--p3:hover { box-shadow: 0 10px 30px rgba(168, 85, 247, 0.1); }
+.inv-card--p4:hover { box-shadow: 0 10px 30px rgba(0, 240, 255, 0.1); }
+
+.inv-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.inv-id {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+  color: var(--text-secondary, #94a3b8);
+}
+
+.inv-badges {
+  display: flex;
+  gap: 8px;
+}
+
+.badge--priority-p1 { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
+.badge--priority-p2 { background: rgba(245, 158, 11, 0.2); color: #fcd34d; }
+.badge--priority-p3 { background: rgba(168, 85, 247, 0.2); color: #d8b4fe; }
+.badge--priority-p4 { background: rgba(0, 240, 255, 0.2); color: #6ee7b7; }
+
+.badge--status-open { border: 1px solid rgba(239, 68, 68, 0.5); color: #fca5a5; }
+.badge--status-in-progress { border: 1px solid rgba(245, 158, 11, 0.5); color: #fcd34d; }
+.badge--status-closed { border: 1px solid rgba(148, 163, 184, 0.5); color: #94a3b8; }
+
+.inv-title {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.4;
+}
+
+.inv-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.inv-assignee {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+}
+
+.avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--glass-border, rgba(255,255,255,0.1));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--accent-cyan, #00f0ff);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+}
+
+.inv-ioc-count {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--accent-purple, #a855f7);
+  background: rgba(168, 85, 247, 0.1);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.inv-progress-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inv-progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: var(--text-secondary, #94a3b8);
+}
+
+.inv-progress-bar {
+  height: 6px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.inv-progress-fill {
+  height: 100%;
+  background: var(--accent-cyan, #00f0ff);
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+  transition: width 1s ease-out;
+}
+
+.inv-footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--text-secondary, #94a3b8);
+  border-top: 1px solid var(--glass-border, rgba(255,255,255,0.06));
+  padding-top: 12px;
+  margin-top: auto;
+}

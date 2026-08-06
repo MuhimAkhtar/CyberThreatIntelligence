@@ -1,0 +1,130 @@
+.cves-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 32px;
+  animation: fade-in 0.4s ease-out;
+  color: var(--text-primary, #e2e8f0);
+}
+
+/* Stats Bar specific to CVEs - 4 cols */
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.cves-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cve-card {
+  display: flex;
+  gap: 24px;
+  background: var(--glass-bg, rgba(255,255,255,0.03));
+  border: 1px solid var(--glass-border, rgba(255,255,255,0.06));
+  border-left-width: 4px;
+  border-radius: 8px;
+  padding: 20px;
+  backdrop-filter: blur(10px);
+  transition: all 0.2s ease;
+  animation: slide-up 0.4s ease-out backwards;
+}
+
+.cve-card:hover {
+  background: rgba(255,255,255,0.05);
+  transform: translateX(4px);
+}
+
+.cve-card--critical { border-left-color: var(--status-danger, #ef4444); }
+.cve-card--high { border-left-color: var(--status-warning, #f59e0b); }
+.cve-card--medium { border-left-color: var(--status-warning, #eab308); }
+
+.cve-card__left {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 160px;
+}
+
+.cve-id {
+  margin: 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.1rem;
+  color: #fff;
+}
+
+.cvss-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 4px;
+  overflow: hidden;
+  font-family: 'JetBrains Mono', monospace;
+  width: fit-content;
+}
+
+.cvss-badge__label {
+  background: rgba(0,0,0,0.4);
+  padding: 4px 8px;
+  font-size: 0.8rem;
+  color: var(--text-secondary, #94a3b8);
+}
+
+.cvss-badge__score {
+  padding: 4px 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.cvss-badge--critical .cvss-badge__score { background: var(--status-danger, #ef4444); }
+.cvss-badge--high .cvss-badge__score { background: var(--status-warning, #f59e0b); }
+
+.cve-card__main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+  flex: 1;
+}
+
+.cve-desc {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--text-primary, #e2e8f0);
+}
+
+.cve-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cve-tags {
+  display: flex;
+  gap: 8px;
+}
+
+.cve-tag {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  color: var(--accent-cyan, #00f0ff);
+}
+
+.cve-info {
+  display: flex;
+  gap: 12px;
+  font-size: 0.85rem;
+  color: var(--text-secondary, #94a3b8);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.cve-status {
+  color: var(--text-primary, #e2e8f0);
+}

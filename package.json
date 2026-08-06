@@ -1,0 +1,27 @@
+{
+  "name": "cyber-threat-platform",
+  "version": "0.1.0",
+  "private": true,
+  "description": "National Cyber Threat Intelligence Platform — AI-Driven Threat Detection, SOC Operations & Investigation Platform",
+  "scripts": {
+    "dev:backend": "pnpm --filter backend run start:dev",
+    "dev:frontend": "pnpm --filter frontend run dev",
+    "build:backend": "pnpm --filter backend run build",
+    "build:frontend": "pnpm --filter frontend run build",
+    "test:backend": "pnpm --filter backend run test",
+    "test:frontend": "pnpm --filter frontend run test",
+    "test": "pnpm -r run test",
+    "lint": "pnpm -r run lint",
+    "docker:up": "docker-compose -f infra/docker/docker-compose.yml up -d",
+    "docker:down": "docker-compose -f infra/docker/docker-compose.yml down",
+    "docker:logs": "docker-compose -f infra/docker/docker-compose.yml logs -f",
+    "db:migrate": "pnpm --filter backend run prisma:migrate",
+    "db:seed": "pnpm --filter backend run prisma:seed",
+    "db:studio": "pnpm --filter backend run prisma:studio"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.15.9"
+}
