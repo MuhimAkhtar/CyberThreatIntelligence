@@ -8,9 +8,11 @@ import { StixNormalizerService } from './normalizers/stix-normalizer.service';
 import { KafkaModule } from '../kafka/kafka.module';
 import { ElasticsearchCustomModule } from '../elasticsearch/elasticsearch.module';
 
+import { Taxii2Controller } from './taxii2.controller';
+
 @Module({
   imports: [KafkaModule, ElasticsearchCustomModule],
-  controllers: [FeedsController],
+  controllers: [FeedsController, Taxii2Controller],
   providers: [
     FeedsService,
     FeedSyncService,

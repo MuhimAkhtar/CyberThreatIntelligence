@@ -5,6 +5,8 @@ import { FeedConnector } from './feed-connector.interface';
 import { MispConnector } from './misp.connector';
 import { OtxConnector } from './otx.connector';
 import { CustomJsonConnector } from './custom-json.connector';
+import { FeodoTrackerConnector } from './feodotracker.connector';
+import { MalwareBazaarConnector } from './malwarebazaar.connector';
 
 @Injectable()
 export class ConnectorFactory {
@@ -40,6 +42,12 @@ export class ConnectorFactory {
           config.headers || {},
           config.mapping || { itemsPath: '', typeField: 'type', valueField: 'value' }
         );
+      }
+      case 'FEODOTRACKER' as any: {
+        return new FeodoTrackerConnector();
+      }
+      case 'MALWAREBAZAAR' as any: {
+        return new MalwareBazaarConnector();
       }
       default:
         throw new Error(`Unsupported feed type: ${feed.type}`);
