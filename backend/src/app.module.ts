@@ -26,6 +26,10 @@ import { MitreModule } from './modules/mitre/mitre.module';
 import { SiemModule } from './modules/siem/siem.module';
 import { PlaybooksModule } from './modules/playbooks/playbooks.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
+import { GraphModule } from './modules/graph/graph.module';
+import { SigmaModule } from './modules/sigma/sigma.module';
+import { DeceptionModule } from './modules/deception/deception.module';
+import { HaModule } from './modules/ha/ha.module';
 
 @Module({
   imports: [
@@ -52,6 +56,10 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
     SiemModule,
     PlaybooksModule,
     NotificationsModule,
+    GraphModule,
+    SigmaModule,
+    DeceptionModule,
+    HaModule,
     ScheduleModule.forRoot(),
     ThrottlerModule.forRoot([{
       name: 'default',

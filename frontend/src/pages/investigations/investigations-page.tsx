@@ -1,4 +1,5 @@
 import React from 'react';
+import { ThreatGraphVisualizer } from '../../components/graph/threat-graph-visualizer';
 import './investigations-page.css';
 
 interface Investigation {
@@ -38,12 +39,15 @@ export const InvestigationsPage: React.FC = () => {
             <path d="M9 10h6"></path>
             <path d="M9 18h6"></path>
           </svg>
-          <h1 className="page-header__title">Investigations</h1>
+          <h1 className="page-header__title">Investigations &amp; Threat Knowledge Graph</h1>
         </div>
-        <p className="page-header__subtitle">Manage active cases, incident response, and threat hunting workflows.</p>
+        <p className="page-header__subtitle">Manage active cases, incident response, and threat actor knowledge graphs.</p>
       </header>
 
-      <div className="inv-toolbar">
+      {/* Interactive Threat Actor Knowledge Graph Visualizer */}
+      <ThreatGraphVisualizer />
+
+      <div className="inv-toolbar" style={{ marginTop: '2rem' }}>
         <div className="stats-bar stats-bar--compact">
           <div className="stat-card">
             <span className="stat-card__label">Open</span>

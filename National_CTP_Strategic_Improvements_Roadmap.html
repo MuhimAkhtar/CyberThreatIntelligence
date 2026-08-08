@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>National CTP - Strategic Improvements & Visionary Roadmap</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 12mm;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #0f172a;
+      background-color: #ffffff;
+      line-height: 1.5;
+      font-size: 10pt;
+      margin: 0;
+      padding: 0;
+    }
+    .header-banner {
+      background: linear-gradient(135deg, #020d08 0%, #061f15 100%);
+      color: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      border-left: 6px solid #00ff9d;
+    }
+    .header-banner h1 {
+      margin: 0 0 6px 0;
+      font-size: 20pt;
+      color: #00ff9d;
+      letter-spacing: -0.5px;
+    }
+    .header-banner p {
+      margin: 0;
+      font-size: 10.5pt;
+      color: #a7f3d0;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      font-size: 8.5pt;
+      font-weight: 700;
+      border-radius: 4px;
+      text-transform: uppercase;
+      font-family: 'Consolas', 'Courier New', Courier, monospace;
+    }
+    .badge-green {
+      background-color: #dcfce7;
+      color: #15803d;
+      border: 1px solid #86efac;
+    }
+    .badge-blue {
+      background-color: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #7dd3fc;
+    }
+    h2 {
+      color: #04150e;
+      border-bottom: 2px solid #00ff9d;
+      padding-bottom: 4px;
+      margin-top: 20px;
+      font-size: 13pt;
+    }
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin: 15px 0;
+    }
+    .card {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-left: 4px solid #10b981;
+      border-radius: 6px;
+      padding: 12px 14px;
+    }
+    .card h3 {
+      margin: 0 0 6px 0;
+      font-size: 11pt;
+      color: #0f172a;
+    }
+    .card p {
+      margin: 0;
+      font-size: 9.5pt;
+      color: #475569;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 9pt;
+    }
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 6px 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #f1f5f9;
+      color: #0f172a;
+      font-weight: 700;
+    }
+    tr:nth-child(even) {
+      background-color: #f8fafc;
+    }
+    .footer-text {
+      margin-top: 30px;
+      font-size: 8.5pt;
+      color: #94a3b8;
+      text-align: center;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-banner">
+    <h1>🚀 Strategic Architectural Roadmap</h1>
+    <p>National Cyber Threat Intelligence Platform — Next-Generation Enhancements</p>
+    <div style="margin-top: 10px;">
+      <span class="badge badge-green">Target: Autonomous Cyber Command Center</span>
+      <span class="badge badge-blue">Enterprise Security &amp; Scale</span>
+    </div>
+  </div>
+
+  <h2>1. Visionary Architectural Modules</h2>
+  <div class="grid-container">
+    <div class="card">
+      <h3>🤖 1. AI Autonomous Active Remediation (Auto-SOAR)</h3>
+      <p>Upgrade playbooks from passive notifications to active eBPF XDP socket drops and <code>iptables</code> firewall rules generated dynamically by Kimi 3 &amp; Claude 3.5 Sonnet ensembles.</p>
+    </div>
+    <div class="card">
+      <h3>🕸️ 2. Neo4j Threat Actor Graph Database</h3>
+      <p>Build a graph database (Neo4j / Memgraph) mapping APT actors &rarr; campaign aliases &rarr; malware families &rarr; infrastructure, rendered via interactive Cytoscape 3D node graphs.</p>
+    </div>
+    <div class="card">
+      <h3>🛡️ 3. FIDO2 / WebAuthn &amp; Vault Secrets</h3>
+      <p>Implement native YubiKey FIDO2 hardware passkey authentication on the NCTIP portal and HashiCorp Vault dynamic zero-trust API key rotation.</p>
+    </div>
+    <div class="card">
+      <h3>🛰️ 4. eBPF Kernel Probes &amp; Sigma Rule Engine</h3>
+      <p>Deploy a C/Go eBPF sensor monitoring kernel syscalls (<code>execve</code>, <code>connect</code>) and a Sigma YAML compiler converting community rules to Elasticsearch DSL queries.</p>
+    </div>
+  </div>
+
+  <h2>2. High-Availability &amp; Enterprise Scale Upgrades</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Architecture Area</th>
+        <th>Current Implementation</th>
+        <th>Proposed Enterprise Upgrade</th>
+        <th>Key Benefit</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Database Cluster</strong></td>
+        <td>PostgreSQL 16 (Single Instance)</td>
+        <td><strong>CockroachDB / PostgreSQL Patroni Active-Active Cluster</strong></td>
+        <td>Zero downtime &amp; multi-region failover</td>
+      </tr>
+      <tr>
+        <td><strong>Message Streaming</strong></td>
+        <td>Single Kafka Broker</td>
+        <td><strong>Kafka MirrorMaker 2 Multi-DC Replication</strong></td>
+        <td>Regional data sovereignty &amp; disaster recovery</td>
+      </tr>
+      <tr>
+        <td><strong>Search Engine</strong></td>
+        <td>Single Elasticsearch Node</td>
+        <td><strong>Elasticsearch 3-Node Cluster with Index Lifecycle (ILM)</strong></td>
+        <td>Long-term multi-terabyte IOC retention</td>
+      </tr>
+      <tr>
+        <td><strong>Cyber Deception</strong></td>
+        <td>Manual Threat Feeds</td>
+        <td><strong>Integrated Honeypot Network (Cowrie / Dionaea) &amp; Canary Tokens</strong></td>
+        <td>Real-time perimeter brute-force capture</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>3. Source Control &amp; System Reference</h2>
+  <p>
+    <strong>GitHub Repository</strong>: <a href="https://github.com/MuhimAkhtar/CyberThreatIntelligence">https://github.com/MuhimAkhtar/CyberThreatIntelligence</a><br>
+    <strong>Interactive Swagger API Docs</strong>: <code>http://localhost:3000/api/docs</code><br>
+    <strong>Live Development Frontend UI</strong>: <code>http://localhost:5173/</code>
+  </p>
+
+  <div class="footer-text">
+    National Cyber Threat Intelligence Platform — Strategic Improvements &amp; Visionary Roadmap
+  </div>
+
+</body>
+</html>
