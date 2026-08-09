@@ -21,9 +21,13 @@ interface IocResult {
 function analyzeIndicatorDynamic(indicator: string, type: string): IocResult {
   const clean = indicator.trim().toLowerCase();
   
-  // Safe whitelisted domains/IPs
+  // Check for localhost / internal loopback addresses
+  const isLocalhost = clean.includes('localhost') || clean.includes('127.0.0.1') || clean.includes('::1') || clean.includes('0.0.0.0');
+  
+  // Safe whitelisted domains/IPs/Localhost
   const safeList = ['google.com', 'github.com', '8.8.8.8', '1.1.1.1', 'cloudflare.com', 'microsoft.com', 'nctip.gov'];
-  if (safeList.includes(clean)) {
+  
+  if (isLocalhost || safeList.includes(clean)) {
     return {
       indicator,
       type: type.toUpperCase(),
@@ -31,16 +35,18 @@ function analyzeIndicatorDynamic(indicator: string, type: string): IocResult {
       confidenceScore: 0,
       firstSeen: new Date(Date.now() - 365 * 24 * 3600 * 1000).toISOString().replace('T', ' ').substring(0, 19) + ' UTC',
       lastSeen: new Date().toISOString().replace('T', ' ').substring(0, 19) + ' UTC',
-      threatCategory: 'Whitelisted Infrastructure',
-      description: `Indicator ${indicator} is verified clean across all 85 global threat intelligence feeds. No malicious telemetry observed.`,
+      threatCategory: isLocalhost ? 'Internal Localhost / Loopback Endpoint' : 'Whitelisted Infrastructure',
+      description: isLocalhost 
+        ? `Indicator ${indicator} is a trusted local development loopback endpoint (Localhost / 127.0.0.1).`
+        : `Indicator ${indicator} is verified clean across all 85 global threat intelligence feeds. No malicious telemetry observed.`,
       sources: [
-        { name: 'VirusTotal (0/92)', status: 'safe' },
+        { name: isLocalhost ? 'Local Loopback (Clean)' : 'VirusTotal (0/92)', status: 'safe' },
         { name: 'CrowdStrike Falcon', status: 'safe' },
         { name: 'Cisco Talos', status: 'safe' },
         { name: 'Google SafeBrowsing', status: 'safe' }
       ],
       associatedActors: [],
-      tags: ['whitelist', 'trusted-infrastructure', 'top-1m']
+      tags: [isLocalhost ? 'localhost' : 'whitelist', 'trusted-infrastructure', 'internal-loopback']
     };
   }
 
