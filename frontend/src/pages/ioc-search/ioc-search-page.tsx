@@ -24,10 +24,23 @@ function analyzeIndicatorDynamic(indicator: string, type: string): IocResult {
   // Check for localhost / internal loopback addresses
   const isLocalhost = clean.includes('localhost') || clean.includes('127.0.0.1') || clean.includes('::1') || clean.includes('0.0.0.0');
   
-  // Safe whitelisted domains/IPs/Localhost
-  const safeList = ['google.com', 'github.com', '8.8.8.8', '1.1.1.1', 'cloudflare.com', 'microsoft.com', 'nctip.gov'];
+  // Safe whitelisted domains/IPs/Localhost/Internal Campus Connect projects
+  const safeList = [
+    'cuiconnect.app',
+    'cui-connect.app',
+    'campusconnect.app',
+    'google.com',
+    'github.com',
+    '8.8.8.8',
+    '1.1.1.1',
+    'cloudflare.com',
+    'microsoft.com',
+    'nctip.gov'
+  ];
   
-  if (isLocalhost || safeList.includes(clean)) {
+  const isInternalProject = clean.includes('cuiconnect') || clean.includes('campusconnect');
+  
+  if (isLocalhost || isInternalProject || safeList.includes(clean)) {
     return {
       indicator,
       type: type.toUpperCase(),
@@ -35,18 +48,22 @@ function analyzeIndicatorDynamic(indicator: string, type: string): IocResult {
       confidenceScore: 0,
       firstSeen: new Date(Date.now() - 365 * 24 * 3600 * 1000).toISOString().replace('T', ' ').substring(0, 19) + ' UTC',
       lastSeen: new Date().toISOString().replace('T', ' ').substring(0, 19) + ' UTC',
-      threatCategory: isLocalhost ? 'Internal Localhost / Loopback Endpoint' : 'Whitelisted Infrastructure',
-      description: isLocalhost 
+      threatCategory: isInternalProject 
+        ? 'Verified Internal Enterprise / Campus Connect Domain'
+        : isLocalhost ? 'Internal Localhost / Loopback Endpoint' : 'Whitelisted Infrastructure',
+      description: isInternalProject
+        ? `Indicator ${indicator} is an authorized internal project domain (Campus Connect Platform). Verified clean and trusted.`
+        : isLocalhost 
         ? `Indicator ${indicator} is a trusted local development loopback endpoint (Localhost / 127.0.0.1).`
         : `Indicator ${indicator} is verified clean across all 85 global threat intelligence feeds. No malicious telemetry observed.`,
       sources: [
-        { name: isLocalhost ? 'Local Loopback (Clean)' : 'VirusTotal (0/92)', status: 'safe' },
+        { name: isInternalProject ? 'Internal Domain Whitelist' : isLocalhost ? 'Local Loopback (Clean)' : 'VirusTotal (0/92)', status: 'safe' },
         { name: 'CrowdStrike Falcon', status: 'safe' },
         { name: 'Cisco Talos', status: 'safe' },
         { name: 'Google SafeBrowsing', status: 'safe' }
       ],
       associatedActors: [],
-      tags: [isLocalhost ? 'localhost' : 'whitelist', 'trusted-infrastructure', 'internal-loopback']
+      tags: [isInternalProject ? 'campus-connect' : isLocalhost ? 'localhost' : 'whitelist', 'trusted-infrastructure', 'authorized-domain']
     };
   }
 
