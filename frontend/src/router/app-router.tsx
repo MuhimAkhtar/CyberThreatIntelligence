@@ -4,6 +4,7 @@ import { LoginPage } from '../pages/login/login-page';
 import { DashboardPage } from '../pages/dashboard/dashboard-page';
 import { AlertsPage } from '../pages/alerts/alerts-page';
 import { IocSearchPage } from '../pages/ioc-search/ioc-search-page';
+import { ThreatsPage } from '../pages/threats/threats-page';
 import { CvesPage } from '../pages/cves/cves-page';
 import { InvestigationsPage } from '../pages/investigations/investigations-page';
 import { SettingsPage } from '../pages/settings/settings-page';
@@ -23,8 +24,9 @@ export const AppRouter: React.FC = () => {
             <Route path="/dashboard" element={<DashboardPage />} />
             
             {/* Standard operational routes */}
-            <Route path="/threats" element={<IocSearchPage />} />
+            <Route path="/threats" element={<ThreatsPage />} />
             <Route path="/alerts" element={<AlertsPage />} />
+            <Route path="/ioc" element={<IocSearchPage />} />
             <Route path="/ioc-search" element={<IocSearchPage />} />
             <Route path="/investigations" element={<InvestigationsPage />} />
             <Route path="/cves" element={<CvesPage />} />
