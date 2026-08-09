@@ -1,81 +1,80 @@
-/* App Layout CSS - Military Tactical HUD Theme */
+/* app-layout.css - App Layout Scroll & Grid Structure */
 .app-layout {
   display: flex;
   height: 100vh;
   width: 100vw;
-  background-color: #050505;
-  color: #e0e0e0;
-  font-family: 'Share Tech Mono', monospace;
+  background-color: #06060a;
+  color: #e2e8f0;
   overflow: hidden;
+  font-family: 'Rajdhani', 'JetBrains Mono', sans-serif;
   position: relative;
 }
 
-.app-layout::before {
-  content: "";
+.app-layout__main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.app-layout__content {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.app-layout__grid-bg {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: 
-    linear-gradient(rgba(255, 45, 45, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 45, 45, 0.05) 1px, transparent 1px);
-  background-size: 30px 30px;
+  right: 0;
+  bottom: 0;
   pointer-events: none;
   z-index: 0;
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 45, 45, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 45, 45, 0.04) 1px, transparent 1px);
 }
 
-.main-content-wrapper {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
+.app-layout__scroll-area {
   position: relative;
   z-index: 1;
-}
-
-.content-area {
-  flex: 1;
-  padding: 20px;
-  overflow-y: auto;
-  position: relative;
-  background: radial-gradient(circle at center, rgba(10, 10, 15, 0.8) 0%, #050505 100%);
-}
-
-.content-area::after {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
   height: 100%;
-  background: linear-gradient(rgba(10, 10, 15, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-  background-size: 100% 4px, 6px 100%;
-  pointer-events: none;
-  z-index: 9999;
-  opacity: 0.3;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 24px;
+  box-sizing: border-box;
 }
 
-/* Scrollbar Styling for Tactical Theme */
-::-webkit-scrollbar {
+/* Tactical HUD Custom Scrollbar */
+.app-layout__scroll-area::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
-::-webkit-scrollbar-track {
+.app-layout__scroll-area::-webkit-scrollbar-track {
   background: rgba(10, 10, 15, 0.8);
   border-left: 1px solid rgba(255, 45, 45, 0.2);
 }
 
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 140, 0, 0.5);
-  border-radius: 0;
+.app-layout__scroll-area::-webkit-scrollbar-thumb {
+  background: rgba(255, 45, 45, 0.5);
+  border-radius: 2px;
+  box-shadow: 0 0 10px rgba(255, 45, 45, 0.5);
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 45, 45, 0.8);
-  box-shadow: 0 0 10px #ff2d2d;
+.app-layout__scroll-area::-webkit-scrollbar-thumb:hover {
+  background: #ff2d2d;
+  box-shadow: 0 0 15px #ff2d2d;
 }
 
-::-webkit-scrollbar-corner {
+.app-layout__scroll-area::-webkit-scrollbar-corner {
   background: #0a0a0f;
 }

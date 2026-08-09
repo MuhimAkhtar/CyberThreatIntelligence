@@ -1,10 +1,12 @@
-/* dashboard-page.css */
 .dashboard-page {
-  padding: 24px;
-  background-color: #0a0a0f;
+  padding: 0;
+  background-color: transparent;
   color: #e0e0e0;
-  font-family: 'Consolas', 'Courier New', monospace;
-  min-height: 100vh;
+  font-family: 'Rajdhani', 'JetBrains Mono', monospace;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
 .dashboard-header {
