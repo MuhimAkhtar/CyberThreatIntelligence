@@ -84,7 +84,7 @@ export const ThreatGraphVisualizer: React.FC = () => {
       case 'THREAT_ACTOR': return '#ef4444';
       case 'CAMPAIGN': return '#f59e0b';
       case 'MALWARE_FAMILY': return '#a855f7';
-      case 'C2_IP': return '#00ff9d';
+      case 'C2_IP': return '#ff2d2d';
       case 'DOMAIN': return '#38bdf8';
       default: return '#94a3b8';
     }
@@ -94,7 +94,7 @@ export const ThreatGraphVisualizer: React.FC = () => {
     <div className="threat-graph-wrapper">
       <div className="graph-header">
         <div className="title-group">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#00ff9d" strokeWidth="2">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#ff2d2d" strokeWidth="2">
             <circle cx="12" cy="12" r="10" />
             <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
             <line x1="2" y1="12" x2="22" y2="12" />
@@ -129,14 +129,14 @@ export const ThreatGraphVisualizer: React.FC = () => {
                       y1={sourceNode.y}
                       x2={targetNode.x}
                       y2={targetNode.y}
-                      stroke="rgba(0, 255, 157, 0.3)"
+                      stroke="rgba(255, 45, 45, 0.3)"
                       strokeWidth="1.5"
                       strokeDasharray={edge.relation === 'USES_INFRASTRUCTURE' ? '4 4' : undefined}
                     />
                     <text
                       x={(sourceNode.x! + targetNode.x!) / 2}
                       y={(sourceNode.y! + targetNode.y!) / 2 - 4}
-                      fill="#6ee7b7"
+                      fill="#ff6b6b"
                       fontSize="9"
                       textAnchor="middle"
                       fontFamily="JetBrains Mono"

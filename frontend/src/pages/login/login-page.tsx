@@ -114,7 +114,7 @@ export const LoginPage: React.FC = () => {
             <path
               d="M150,150 Q180,130 220,150 T280,180 T240,240 T170,220 Z M300,280 Q340,260 370,300 T350,400 T280,380 Z M500,120 Q560,100 620,130 T680,180 T600,220 T520,180 Z M650,250 Q750,220 850,260 T900,350 T780,380 T680,320 Z"
               fill="none"
-              stroke="rgba(0, 255, 157, 0.3)"
+              stroke="rgba(255, 45, 45, 0.3)"
               strokeWidth="1.5"
               strokeDasharray="4 4"
             />
@@ -134,10 +134,10 @@ export const LoginPage: React.FC = () => {
           <div className="portal-header">
             <div className="emblem-wrapper">
               <svg viewBox="0 0 100 100" className="emblem-svg">
-                <path d="M50 5 L90 25 L90 75 L50 95 L10 75 L10 25 Z" fill="none" stroke="#00ff9d" strokeWidth="3" />
-                <path d="M50 15 L80 30 L80 70 L50 85 L20 70 L20 30 Z" fill="rgba(0, 255, 157, 0.1)" stroke="#00ff9d" strokeWidth="1.5" />
-                <text x="50" y="52" textAnchor="middle" fill="#00ff9d" fontSize="13" fontWeight="bold" fontFamily="Orbitron">NCTIP</text>
-                <path d="M35 65 Q50 75 65 65" fill="none" stroke="#00ff9d" strokeWidth="2" />
+                <path d="M50 5 L90 25 L90 75 L50 95 L10 75 L10 25 Z" fill="none" stroke="#ff2d2d" strokeWidth="3" />
+                <path d="M50 15 L80 30 L80 70 L50 85 L20 70 L20 30 Z" fill="rgba(255, 45, 45, 0.1)" stroke="#ff2d2d" strokeWidth="1.5" />
+                <text x="50" y="52" textAnchor="middle" fill="#ff2d2d" fontSize="13" fontWeight="bold" fontFamily="Orbitron">NCTIP</text>
+                <path d="M35 65 Q50 75 65 65" fill="none" stroke="#ff2d2d" strokeWidth="2" />
               </svg>
             </div>
             <h1 className="portal-title">NATIONAL CYBER THREAT INTELLIGENCE PLATFORM</h1>

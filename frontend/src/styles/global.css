@@ -1,216 +1,154 @@
-@import './variables.css';
-@import './reset.css';
-@import './animations.css';
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap');
 
-/* Typography */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   background-color: var(--color-bg-base);
   color: var(--color-text-primary);
+  font-family: 'Rajdhani', sans-serif;
+  background-image: var(--bg-grid-pattern);
+  background-size: var(--pattern-grid-size) var(--pattern-grid-size);
   overflow-x: hidden;
   position: relative;
 }
 
-/* Grid Pattern Background */
+/* HUD Scan Line Animation Overlay */
 body::after {
-  content: '';
+  content: "";
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-image: var(--bg-grid-pattern);
-  background-size: var(--pattern-grid-size) var(--pattern-grid-size);
+  background: linear-gradient(
+    to bottom,
+    transparent 50%,
+    rgba(255, 45, 45, 0.05) 51%,
+    transparent 51%
+  );
+  background-size: 100% 4px;
   pointer-events: none;
-  z-index: var(--z-base);
-  opacity: 0.5;
+  z-index: 9999;
+  animation: scanLine 8s linear infinite;
+  opacity: 0.6;
 }
 
-/* Headings */
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Orbitron', 'Inter', sans-serif;
-  font-weight: 600;
-  color: var(--color-text-primary);
-  letter-spacing: 0.5px;
-}
-
-/* Links */
-a {
-  color: var(--color-primary-base);
-  text-decoration: none;
-  transition: var(--transition-fast);
-}
-
-a:hover {
-  color: #fff;
-  text-shadow: var(--glow-primary-sm);
-}
-
-/* Button Base Reset */
-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: inherit;
-  font-family: inherit;
-}
-
-/* Utilities */
-
-.font-mono {
-  font-family: 'JetBrains Mono', monospace;
-}
-
-.font-orbitron {
   font-family: 'Orbitron', sans-serif;
-}
-
-/* Glassmorphism Panel */
-.glass-panel {
-  background: var(--glass-bg-medium);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: var(--glass-border);
-  border-radius: 8px;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-  position: relative;
-  z-index: var(--z-elevated);
-}
-
-.glass-panel:hover {
-  border-color: var(--color-border-strong);
-}
-
-/* Glow Text */
-.glow-text-primary {
+  text-transform: uppercase;
+  letter-spacing: 2px;
   color: var(--color-primary-base);
+}
+
+/* Military Stencil Heading Treatment */
+.stencil-heading {
+  font-family: 'Orbitron', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  color: var(--color-primary-base);
+  border-bottom: 2px solid var(--color-primary-base);
+  padding-bottom: 4px;
+  display: inline-block;
   text-shadow: var(--glow-primary-sm);
-}
-
-.glow-text-secondary {
-  color: var(--color-secondary-base);
-  text-shadow: var(--glow-secondary-sm);
-}
-
-.glow-text-danger {
-  color: var(--color-danger-base);
-  text-shadow: var(--glow-danger);
-}
-
-/* Cyber Animated Border */
-.cyber-border {
   position: relative;
 }
 
-.cyber-border::before {
+.stencil-heading::before {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  width: 30%;
+  height: 2px;
+  background-color: var(--color-secondary-base);
+}
+
+code, pre, .mono {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9em;
+}
+
+/* HUD Card with Angular Clip Path */
+.hud-card {
+  background: var(--gradient-card);
+  border: 1px solid var(--color-primary-30);
+  padding: var(--space-4);
+  position: relative;
+  clip-path: polygon(
+    0 15px,
+    15px 0,
+    100% 0,
+    100% calc(100% - 15px),
+    calc(100% - 15px) 100%,
+    0 100%
+  );
+  box-shadow: var(--glow-primary-sm);
+  backdrop-filter: var(--glass-blur);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-4);
+}
+
+/* Corner Bracket Decorations */
+.hud-card::before,
+.hud-card::after {
   content: '';
   position: absolute;
-  top: -1px;
-  left: -1px;
-  right: -1px;
-  bottom: -1px;
-  background: linear-gradient(90deg, var(--color-primary-base), var(--color-secondary-base), var(--color-primary-base));
-  background-size: 200% 200%;
-  z-index: -1;
-  border-radius: inherit;
-  animation: borderGlow 4s linear infinite;
-  opacity: 0;
-  transition: opacity var(--transition-normal);
-}
-
-.cyber-border:hover::before {
-  opacity: 1;
-}
-
-/* Status Dots */
-.status-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  display: inline-block;
-}
-
-.status-dot.success {
-  background-color: var(--color-success-base);
-  box-shadow: var(--glow-success);
-}
-
-.status-dot.warning {
-  background-color: var(--color-warning-base);
-  box-shadow: var(--glow-warning);
-}
-
-.status-dot.danger {
-  background-color: var(--color-danger-base);
-  box-shadow: var(--glow-danger);
-}
-
-.status-dot.primary {
-  background-color: var(--color-primary-base);
-  box-shadow: var(--glow-primary-sm);
-}
-
-/* Severity Colors */
-.text-success { color: var(--color-success-base); }
-.text-warning { color: var(--color-warning-base); }
-.text-danger { color: var(--color-danger-base); }
-
-.bg-success { background-color: var(--color-success-10); border: 1px solid rgba(16, 185, 129, 0.2); }
-.bg-warning { background-color: var(--color-warning-10); border: 1px solid rgba(245, 158, 11, 0.2); }
-.bg-danger { background-color: var(--color-danger-10); border: 1px solid rgba(239, 68, 68, 0.2); }
-
-/* Skeleton Loading */
-.skeleton {
-  background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 75%);
-  background-size: 200% 100%;
-  animation: shimmer 2s infinite linear;
-  border-radius: 4px;
-}
-
-/* Tooltip Base */
-.tooltip {
-  position: absolute;
-  background: var(--color-bg-elevated);
-  border: 1px solid var(--color-primary-30);
-  box-shadow: var(--glow-primary-sm);
-  color: var(--color-text-primary);
-  padding: var(--space-2) var(--space-3);
-  border-radius: 4px;
-  font-size: 12px;
+  width: 20px;
+  height: 20px;
   pointer-events: none;
-  z-index: var(--z-tooltip);
-  opacity: 0;
-  transition: opacity var(--transition-fast);
 }
 
-.has-tooltip:hover .tooltip {
-  opacity: 1;
-}
-
-/* Layout Utilities */
-#root {
-  display: flex;
-  min-height: 100vh;
-  width: 100vw;
-}
-
-.main-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-
-/* Scanline Effect Overlay */
-.scanline-overlay {
-  position: fixed;
+.hud-card::before {
   top: 0;
-  left: 0;
-  width: 100vw;
-  height: 10px;
-  background: linear-gradient(to bottom, transparent, rgba(0, 240, 255, 0.1), transparent);
-  opacity: 0.3;
-  animation: scanline 8s linear infinite;
+  left: 15px;
+  border-top: 2px solid var(--color-primary-base);
+  border-left: 2px solid var(--color-primary-base);
+}
+
+.hud-card::after {
+  bottom: 0;
+  right: 15px;
+  border-bottom: 2px solid var(--color-primary-base);
+  border-right: 2px solid var(--color-primary-base);
+}
+
+/* Targeting Reticle Overlay */
+.targeting-reticle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100px;
+  height: 100px;
+  border: 1px solid var(--color-primary-30);
+  border-radius: 50%;
   pointer-events: none;
-  z-index: var(--z-overlay);
+  animation: targetLock 10s linear infinite;
+}
+
+.targeting-reticle::before,
+.targeting-reticle::after {
+  content: '';
+  position: absolute;
+  background-color: var(--color-primary-base);
+}
+
+.targeting-reticle::before {
+  top: 50%;
+  left: -10px;
+  right: -10px;
+  height: 1px;
+  transform: translateY(-50%);
+}
+
+.targeting-reticle::after {
+  left: 50%;
+  top: -10px;
+  bottom: -10px;
+  width: 1px;
+  transform: translateX(-50%);
 }
