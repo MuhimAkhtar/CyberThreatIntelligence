@@ -9,13 +9,15 @@
 .matrix-login-container {
   position: relative;
   width: 100vw;
-  height: 100vh;
   min-height: 100vh;
   background-color: #050508;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-top: 60px;
+  padding-bottom: 40px;
   font-family: 'Rajdhani', 'JetBrains Mono', monospace;
   color: #e2e8f0;
 }
@@ -275,27 +277,23 @@
   z-index: 50;
   width: 100%;
   max-width: 480px;
-  padding: 20px;
-  margin-top: 36px; /* below command bar */
+  padding: 10px 20px;
+  margin-top: 10px;
 }
 
 /* ── Portal Card ── */
 .portal-card {
-  background: linear-gradient(165deg, rgba(18, 18, 28, 0.95) 0%, rgba(8, 8, 14, 0.98) 100%);
-  border: 1px solid rgba(255, 45, 45, 0.2);
+  background: linear-gradient(165deg, rgba(18, 18, 28, 0.96) 0%, rgba(8, 8, 14, 0.98) 100%);
+  border: 1px solid rgba(255, 45, 45, 0.25);
   border-top: 3px solid #ff2d2d;
-  border-radius: 2px;
-  padding: 36px 32px 28px;
+  border-radius: 4px;
+  padding: 32px 32px 28px;
   position: relative;
   box-shadow:
-    0 0 40px rgba(255, 45, 45, 0.1),
-    0 20px 60px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    0 0 45px rgba(255, 45, 45, 0.15),
+    0 20px 60px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(20px);
-  clip-path: polygon(
-    0 16px, 16px 0, calc(100% - 16px) 0, 100% 16px,
-    100% calc(100% - 16px), calc(100% - 16px) 100%, 16px 100%, 0 calc(100% - 16px)
-  );
 }
 
 /* Corner brackets */
@@ -324,25 +322,36 @@
 /* ── Portal Header ── */
 .portal-header {
   text-align: center;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
 
 .emblem-wrapper {
-  width: 90px;
-  height: 90px;
+  width: 105px;
+  height: 105px;
   margin: 0 auto 16px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.emblem-svg {
+.isi-emblem-img {
   width: 100%;
   height: 100%;
-  filter: drop-shadow(0 0 15px rgba(255, 45, 45, 0.4));
-  animation: emblemPulse 3s ease-in-out infinite;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #ff2d2d;
+  box-shadow:
+    0 0 25px rgba(255, 45, 45, 0.5),
+    0 0 10px rgba(255, 140, 0, 0.4);
+  transition: all 0.3s ease;
 }
 
-@keyframes emblemPulse {
-  0%, 100% { filter: drop-shadow(0 0 10px rgba(255, 45, 45, 0.3)); }
-  50% { filter: drop-shadow(0 0 25px rgba(255, 45, 45, 0.6)); }
+.isi-emblem-img:hover {
+  transform: scale(1.05);
+  box-shadow:
+    0 0 35px rgba(255, 45, 45, 0.7),
+    0 0 15px rgba(255, 140, 0, 0.6);
 }
 
 .portal-title {

@@ -133,15 +133,10 @@ export const LoginPage: React.FC = () => {
           {/* Card Header Emblem */}
           <div className="portal-header">
             <div className="emblem-wrapper">
-              <svg viewBox="0 0 100 100" className="emblem-svg">
-                <path d="M50 5 L90 25 L90 75 L50 95 L10 75 L10 25 Z" fill="none" stroke="#ff2d2d" strokeWidth="3" />
-                <path d="M50 15 L80 30 L80 70 L50 85 L20 70 L20 30 Z" fill="rgba(255, 45, 45, 0.1)" stroke="#ff2d2d" strokeWidth="1.5" />
-                <text x="50" y="52" textAnchor="middle" fill="#ff2d2d" fontSize="13" fontWeight="bold" fontFamily="Orbitron">NCTIP</text>
-                <path d="M35 65 Q50 75 65 65" fill="none" stroke="#ff2d2d" strokeWidth="2" />
-              </svg>
+              <img src="/isi-logo.jpg" alt="ISI Intelligence Emblem" className="isi-emblem-img" />
             </div>
             <h1 className="portal-title">NATIONAL CYBER THREAT INTELLIGENCE PLATFORM</h1>
-            <p className="portal-subtitle">ACCESS CONTROL PORTAL // AUTHORIZED PERSONNEL ONLY.</p>
+            <p className="portal-subtitle">INTER-SERVICES INTELLIGENCE // AUTHORIZED PERSONNEL ONLY</p>
           </div>
 
           <form className="portal-form" onSubmit={handleSubmit}>
