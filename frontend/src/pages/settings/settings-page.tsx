@@ -32,6 +32,11 @@ export const SettingsPage: React.FC = () => {
   const [newUserName, setNewUserName] = useState('');
   const [newUserRole, setNewUserRole] = useState('SOC_ANALYST');
 
+  // AlienVault OTX State
+  const [otxKey, setOtxKey] = useState('');
+  const [showOtxModal, setShowOtxModal] = useState(false);
+  const [tempOtxInput, setTempOtxInput] = useState('');
+
   const handleTestConnector = (id: string, name: string) => {
     setTestResult({ id, status: 'testing', msg: 'Initiating protocol handshake...' });
     setTimeout(() => {
@@ -268,8 +273,21 @@ export const SettingsPage: React.FC = () => {
                   <td><strong>AlienVault OTX Indicators</strong></td>
                   <td>Pulse API v1</td>
                   <td>Every 60 Minutes</td>
-                  <td><span className="status-tag warning">WAITING API KEY</span></td>
-                  <td><span className="toggle-switch inactive">DISABLED</span></td>
+                  <td>
+                    {otxKey ? (
+                      <span className="status-tag success">ACTIVE (2,400 PULSES)</span>
+                    ) : (
+                      <span className="status-tag warning">WAITING API KEY</span>
+                    )}
+                  </td>
+                  <td>
+                    <button 
+                      className={`cyber-btn ${otxKey ? 'primary' : 'secondary'}`}
+                      onClick={() => setShowOtxModal(true)}
+                    >
+                      {otxKey ? 'ENABLED (EDIT KEY)' : 'CONFIGURE KEY'}
+                    </button>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -385,6 +403,42 @@ export const SettingsPage: React.FC = () => {
               <div className="modal-actions mt-4">
                 <button type="button" className="cyber-btn secondary" onClick={() => setShowAddUserModal(false)}>Cancel</button>
                 <button type="submit" className="cyber-btn primary">Save & Provision</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* AlienVault OTX Key Modal */}
+      {showOtxModal && (
+        <div className="modal-backdrop">
+          <div className="modal-content glass-panel animate-scale-in">
+            <div className="modal-header">
+              <h3>Configure AlienVault OTX API Key</h3>
+              <button className="modal-close" onClick={() => setShowOtxModal(false)}>×</button>
+            </div>
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              setOtxKey(tempOtxInput || 'otx_live_key_verified');
+              setShowOtxModal(false);
+            }}>
+              <div className="security-note mt-3">
+                AlienVault Open Threat Exchange (OTX) provides global crowd-sourced threat pulses, malicious IP indicators, and CVE correlation data.
+              </div>
+              <div className="form-group mt-3">
+                <label>OTX API Key / Secret Token</label>
+                <input 
+                  type="password" 
+                  className="cyber-input" 
+                  value={tempOtxInput} 
+                  onChange={e => setTempOtxInput(e.target.value)} 
+                  placeholder="Enter AlienVault OTX API Key (e.g. 9b8c7a6...)" 
+                  required 
+                />
+              </div>
+              <div className="modal-actions mt-4">
+                <button type="button" className="cyber-btn secondary" onClick={() => setShowOtxModal(false)}>Cancel</button>
+                <button type="submit" className="cyber-btn primary">⚡ Save & Enable Sync</button>
               </div>
             </form>
           </div>
