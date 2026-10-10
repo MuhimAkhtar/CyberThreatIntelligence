@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useAuthStore } from '../../store/auth.store';
 import './threat-graph-visualizer.css';
 
 export interface GraphNode {
@@ -30,8 +31,8 @@ export const ThreatGraphVisualizer: React.FC = () => {
 
   const fetchGraphData = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const res = await fetch('http://localhost:3000/api/v1/graph/threat-network', {
+      const token = useAuthStore.getState().accessToken;
+      const res = await fetch('/api/v1/graph/threat-network', {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
       if (!res.ok) throw new Error('Failed to fetch graph data');

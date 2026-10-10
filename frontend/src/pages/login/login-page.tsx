@@ -37,7 +37,7 @@ export const LoginPage: React.FC = () => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      await login({ email, password });
+      await login({ email: email.trim().toLowerCase(), password: password.trim() });
       navigate('/dashboard');
     } catch (err) {
       console.warn('Backend login fallback initiated for instant demo access');
@@ -156,6 +156,9 @@ export const LoginPage: React.FC = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  spellCheck={false}
                   disabled={isLoading || isSubmitting}
                 />
               </div>
